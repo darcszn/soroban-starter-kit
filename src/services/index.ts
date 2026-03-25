@@ -16,3 +16,7 @@ export { transactionQueue } from './transactionQueue';
 
 // Sync Service
 export { syncService } from './sync';
+
+// Logger
+export { logger, type LogLevel, type LogEntry, type StellarLogData } from './logger';
+export { installFetchLogger } from './logger/middleware';
