@@ -2,6 +2,8 @@ import { accessibilityManager } from '../accessibilityManager';
 
 describe('AccessibilityManager', () => {
   beforeEach(() => {
+    accessibilityManager.clearListeners();
+    accessibilityManager.resetMetrics();
     accessibilityManager.updateSettings({
       highContrast: false,
       fontSize: 'normal',
@@ -19,12 +21,14 @@ describe('AccessibilityManager', () => {
       expect(settings.highContrast).toBe(true);
     });
 
-    it('should notify listeners on settings change', (done) => {
-      accessibilityManager.subscribe((settings) => {
-        expect(settings.highContrast).toBe(true);
-        done();
+    it('should notify listeners on settings change', () => {
+      return new Promise<void>((resolve) => {
+        accessibilityManager.subscribe((settings) => {
+          expect(settings.highContrast).toBe(true);
+          resolve();
+        });
+        accessibilityManager.updateSettings({ highContrast: true });
       });
-      accessibilityManager.updateSettings({ highContrast: true });
     });
 
     it('should support multiple listeners', () => {
@@ -58,7 +62,7 @@ describe('AccessibilityManager', () => {
 
   describe('Screen Reader Support', () => {
     it('should announce messages', () => {
-      const spy = jest.spyOn(document.body, 'appendChild');
+      const spy = vi.spyOn(document.body, 'appendChild');
       accessibilityManager.announce('Test message');
       expect(spy).toHaveBeenCalled();
       spy.mockRestore();
