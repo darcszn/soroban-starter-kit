@@ -1,3 +1,7 @@
+// Test Reporting
+export { testReportingService } from './testReporting';
+export type { TestResult, TestRun, TestStatus, QualityGate, TestAnalytics } from './testReporting';
+
 // State Management Services
 export { stateManager, type NormalizedState, type StateMetrics } from './stateManager';
 export { persistenceManager } from './persistenceManager';
