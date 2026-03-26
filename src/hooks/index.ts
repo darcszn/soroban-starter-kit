@@ -14,3 +14,10 @@ export {
   useSyncEvents,
   usePerformanceMetrics,
 } from './useStateOptimization';
+
+export {
+  usePerformanceAlerts,
+  usePerformanceAnalysis,
+  usePerformanceComparison,
+  usePerformanceBudgets,
+} from './usePerformance';

@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { ConnectivityStatus, OfflineBanner } from './components/ConnectivityStatus';
 import { TransactionList } from './components/TransactionItem';
 import { AdvancedBalanceDisplay } from './components/AdvancedBalanceDisplay';
-import { TransactionFormBuilder } from './components/TransactionFormBuilder';
-import { TokenTransferWizard } from './components/TokenTransferWizard';
-import { PortfolioDashboard } from './components/PortfolioDashboard';
 import { SyncStatus, OfflineIndicator } from './components/SyncStatus';
 import { SearchPage } from './components/SearchPage';
 import { ResponsiveNav, Breadcrumb, ContextualNav, Dashboard, LiveDataFeed, NotificationCenter, NotificationPreferences, AlertRules } from './components';
@@ -16,12 +13,20 @@ import { InstallBanner, PushToggle } from './components/PWAControls';
 import { useConnectivity } from './context/ConnectivityContext';
 import { useStorage } from './context/StorageContext';
 import { useTransactionQueue } from './context/TransactionQueueContext';
-import { DashboardBuilder } from './builder/DashboardBuilder';
-import { WorkflowLauncher } from './workflow';
 import { DataTable } from './table';
 import type { ColumnDef } from './table';
 import type { CachedTransaction } from './services/storage/types';
 import type { ComponentType } from './builder/types';
+
+// Lazy-loaded heavy components for code splitting
+const TransactionFormBuilder = lazy(() => import('./components/TransactionFormBuilder').then(m => ({ default: m.TransactionFormBuilder })));
+const TokenTransferWizard = lazy(() => import('./components/TokenTransferWizard').then(m => ({ default: m.TokenTransferWizard })));
+const PortfolioDashboard = lazy(() => import('./components/PortfolioDashboard').then(m => ({ default: m.PortfolioDashboard })));
+const DashboardBuilder = lazy(() => import('./builder/DashboardBuilder').then(m => ({ default: m.DashboardBuilder })));
+const WorkflowLauncher = lazy(() => import('./workflow').then(m => ({ default: m.WorkflowLauncher })));
+const PerformanceDashboard = lazy(() => import('./components/PerformanceDashboard').then(m => ({ default: m.PerformanceDashboard })));
+
+const LazyFallback = () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading…</div>;
 
 function App(): JSX.Element {
   const { isOnline } = useConnectivity();
@@ -121,6 +126,15 @@ function App(): JSX.Element {
       onClick: () => {
         setActiveTab('settings');
         setBreadcrumbs([{ label: 'Home' }, { label: 'Settings' }]);
+      },
+    },
+    {
+      id: 'performance',
+      label: 'Performance',
+      icon: '⚡',
+      onClick: () => {
+        setActiveTab('performance' as any);
+        setBreadcrumbs([{ label: 'Home' }, { label: 'Performance' }]);
       },
     },
   ];
@@ -260,7 +274,9 @@ function App(): JSX.Element {
       {/* Main Content */}
       <main className="main-content container">
         {builderMode ? (
-          <DashboardBuilder renderComponent={renderComponent} />
+          <Suspense fallback={<LazyFallback />}>
+            <DashboardBuilder renderComponent={renderComponent} />
+          </Suspense>
         ) : (
         <>
         {/* Demo Section - Create Transaction */}
@@ -385,15 +401,21 @@ function App(): JSX.Element {
             )}
 
             {activeTab === 'analytics' && (
-              <PortfolioDashboard />
+              <Suspense fallback={<LazyFallback />}>
+                <PortfolioDashboard />
+              </Suspense>
             )}
 
             {activeTab === 'transfer' && (
-              <TokenTransferWizard />
+              <Suspense fallback={<LazyFallback />}>
+                <TokenTransferWizard />
+              </Suspense>
             )}
 
             {activeTab === 'build' && (
-              <TransactionFormBuilder />
+              <Suspense fallback={<LazyFallback />}>
+                <TransactionFormBuilder />
+              </Suspense>
             )}
 
             {activeTab === 'pending' && (
@@ -425,11 +447,13 @@ function App(): JSX.Element {
             )}
 
             {activeTab === 'workflows' && (
-              <WorkflowLauncher
-                onComplete={(templateId, values) =>
-                  console.info('Workflow completed:', templateId, values)
-                }
-              />
+              <Suspense fallback={<LazyFallback />}>
+                <WorkflowLauncher
+                  onComplete={(templateId, values) =>
+                    console.info('Workflow completed:', templateId, values)
+                  }
+                />
+              </Suspense>
             )}
 
             {activeTab === 'table' && (
@@ -540,6 +564,12 @@ function App(): JSX.Element {
                 <AlertRules />
               </div>
             </>
+          )}
+
+          {(activeTab as string) === 'performance' && (
+            <Suspense fallback={<LazyFallback />}>
+              <PerformanceDashboard />
+            </Suspense>
           )}
         </main>
       </div>
