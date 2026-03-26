@@ -9,6 +9,7 @@ import { TutorialProvider } from './context/TutorialContext';
 import { PWAProvider } from './context/PWAContext';
 import { SecurityProvider } from './context/SecurityContext';
 import { AdminProvider } from './context/AdminContext';
+import { GatewayProvider } from './context/GatewayContext';
 import './styles/index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -20,9 +21,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <ConnectivityProvider>
               <StorageProvider>
                 <AdminProvider>
-                  <TransactionQueueProvider>
-                    <App />
-                  </TransactionQueueProvider>
+                  <GatewayProvider>
+                    <TransactionQueueProvider>
+                      <App />
+                    </TransactionQueueProvider>
+                  </GatewayProvider>
                 </AdminProvider>
               </StorageProvider>
             </ConnectivityProvider>

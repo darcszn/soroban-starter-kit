@@ -7,6 +7,7 @@ import { TokenTransferWizard } from './components/TokenTransferWizard';
 import { PortfolioDashboard } from './components/PortfolioDashboard';
 import { PortfolioAnalytics } from './components/PortfolioAnalytics';
 import { AdminPanel } from './components/AdminPanel';
+import { ApiGatewayPortal } from './components/ApiGatewayPortal';
 import { SyncStatus, OfflineIndicator } from './components/SyncStatus';
 import { SearchPage } from './components/SearchPage';
 import { ResponsiveNav, Breadcrumb, ContextualNav, Dashboard, LiveDataFeed, NotificationCenter, NotificationPreferences, AlertRules } from './components';
@@ -325,6 +326,13 @@ function App(): JSX.Element {
             🛡 Admin
           </button>
           <button
+            onClick={() => setActiveTab('gateway' as any)}
+            className={(activeTab as string) === 'gateway' ? 'btn btn-primary' : 'btn btn-secondary'}
+            style={{ backgroundColor: (activeTab as string) === 'gateway' ? 'var(--color-highlight)' : 'transparent' }}
+          >
+            🔀 API Gateway
+          </button>
+          <button
             onClick={() => setActiveTab('transfer')}
             className={activeTab === 'transfer' ? 'btn btn-primary' : 'btn btn-secondary'}
             style={{ backgroundColor: activeTab === 'transfer' ? 'var(--color-highlight)' : 'transparent' }}
@@ -399,6 +407,10 @@ function App(): JSX.Element {
 
             {(activeTab as string) === 'admin' && (
               <AdminPanel />
+            )}
+
+            {(activeTab as string) === 'gateway' && (
+              <ApiGatewayPortal />
             )}
 
             {activeTab === 'transfer' && (
