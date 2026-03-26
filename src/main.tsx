@@ -10,6 +10,7 @@ import { PWAProvider } from './context/PWAContext';
 import { SecurityProvider } from './context/SecurityContext';
 import { AdminProvider } from './context/AdminContext';
 import { GatewayProvider } from './context/GatewayContext';
+import { DatabaseProvider } from './context/DatabaseContext';
 import './styles/index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -22,9 +23,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <StorageProvider>
                 <AdminProvider>
                   <GatewayProvider>
-                    <TransactionQueueProvider>
-                      <App />
-                    </TransactionQueueProvider>
+                    <DatabaseProvider>
+                      <TransactionQueueProvider>
+                        <App />
+                      </TransactionQueueProvider>
+                    </DatabaseProvider>
                   </GatewayProvider>
                 </AdminProvider>
               </StorageProvider>
