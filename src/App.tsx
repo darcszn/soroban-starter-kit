@@ -9,6 +9,8 @@ import { TokenTransferWizard } from './components/TokenTransferWizard';
 import { PortfolioDashboard } from './components/PortfolioDashboard';
 import { PortfolioAnalytics } from './components/PortfolioAnalytics';
 import { AdminPanel } from './components/AdminPanel';
+import { ApiGatewayPortal } from './components/ApiGatewayPortal';
+import { DatabasePanel } from './components/DatabasePanel';
 import { SyncStatus, OfflineIndicator } from './components/SyncStatus';
 import { SearchPage } from './components/SearchPage';
 import {
@@ -636,6 +638,13 @@ function App(): JSX.Element {
             🔀 API Gateway
           </button>
           <button
+            onClick={() => setActiveTab('database' as any)}
+            className={(activeTab as string) === 'database' ? 'btn btn-primary' : 'btn btn-secondary'}
+            style={{ backgroundColor: (activeTab as string) === 'database' ? 'var(--color-highlight)' : 'transparent' }}
+          >
+            🗄 Database
+          </button>
+          <button
             onClick={() => setActiveTab('transfer')}
             className={activeTab === 'transfer' ? 'btn btn-primary' : 'btn btn-secondary'}
             style={{ backgroundColor: activeTab === 'transfer' ? 'var(--color-highlight)' : 'transparent' }}
@@ -720,6 +729,10 @@ function App(): JSX.Element {
               <Suspense fallback={<LazyFallback />}>
                 <PortfolioDashboard />
               </Suspense>
+            )}
+
+            {(activeTab as string) === 'database' && (
+              <DatabasePanel />
             )}
 
             {activeTab === 'transfer' && (
