@@ -18,7 +18,9 @@
     "audit": "npm audit",
     "audit:fix": "npm audit fix",
     "audit:report": "npm audit --json > audit-report.json",
-    "ci": "npm run lint && npm run audit"
+    "docs:check": "node scripts/check-docs.mjs",
+    "docs:report": "node scripts/check-docs.mjs --report",
+    "ci": "npm run lint && npm run docs:check && npm run audit"
   },
   "dependencies": {
     "@stellar/freighter-api": "^1.7.1",
@@ -40,6 +42,7 @@
     "@vitest/coverage-v8": "^4.1.1",
     "@vitest/ui": "^4.1.1",
     "axe-core": "^4.11.1",
+    "eslint-plugin-jsdoc": "^48.0.0",
     "eslint": "^9.39.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
