@@ -266,6 +266,32 @@ class StorageService {
       timestamp: now,
       expiresAt: now + ttlSeconds * 1000,
     } as any);
+  async getAllUsers(): Promise<UserRecord[]> {
+    return withDBError(() => this.conn.getAll('users'));
+  }
+
+  // ── Settings ──────────────────────────────────────────────────────────────
+
+  async setSetting(key: string, value: unknown): Promise<void> {
+    return withDBError(() =>
+      this.conn.put('settings', { key, value, updatedAt: Date.now() })
+    );
+  }
+
+  async getSetting<T>(key: string): Promise<T | undefined> {
+    return withDBError(async () => {
+      const record = await this.conn.get('settings', key);
+      return record?.value as T | undefined;
+    });
+  }
+
+  // ── Cache ─────────────────────────────────────────────────────────────────
+
+  async setCache(key: string, data: unknown, ttlSeconds = 3600): Promise<void> {
+    const now = Date.now();
+    return withDBError(() =>
+      this.conn.put('cache', { data, timestamp: now, expiresAt: now + ttlSeconds * 1000 }, key)
+    );
   }
 
   /**
