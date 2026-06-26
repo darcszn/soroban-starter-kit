@@ -220,6 +220,26 @@ Start a local Stellar node with Soroban RPC:
 docker compose up stellar-node
 ```
 
+### Scaffolding a New Contract
+
+```bash
+./scripts/new-contract.sh <contract-name>
+```
+
+`<contract-name>` must be lowercase kebab-case (e.g. `payment-splitter`). The script creates `contracts/<contract-name>/` with a compilable stub and registers the new crate in the workspace Cargo.toml.
+
+**Example:**
+
+```bash
+# Scaffold and verify the new contract builds and tests pass
+./scripts/new-contract.sh payment-splitter
+cd contracts/payment-splitter
+cargo test                                                    # two unit tests pass
+stellar contract build --manifest-path Cargo.toml            # compiles to WASM
+```
+
+The generated contract includes an `initialize(admin)` entry point, placeholder modules for errors, events, and storage, and two passing unit tests. Customize `src/lib.rs` to add your contract logic.
+
 ## ⚠️ Error Reference
 
 > For full details — causes, triggers, and resolution steps — see [docs/error-reference.md](docs/error-reference.md).
